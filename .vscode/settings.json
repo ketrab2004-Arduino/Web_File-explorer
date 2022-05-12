@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        ".gitignore": true,
+        ".vscode": true,
+
+        "platformio.ini": true,
+        ".pio": true
+    },
+    "cmake.configureOnOpen": false
+}
