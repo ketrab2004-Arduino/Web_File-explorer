@@ -4,7 +4,8 @@
 #include <stdint.h>
 #include "settings.h"
 
-uint8_t mac[] = MAC_ADDRESS;
+uint8_t mac[] = { MAC_ADDRESS };
+IPAddress ip(IP_ADDRESS);
 
 EthernetServer server(80);
 
@@ -19,20 +20,21 @@ void setup() {
     Serial.println(F("Starting..."));
 
     // attempt to connect to the internet (with DHCP for an IP address)
-    if (Ethernet.begin(mac) == 0) {
-        Serial.println(F("Failed to configure Ethernet using DHCP"));
+    Ethernet.begin(mac, ip);
 
-        // check if failed because of no hardware
-        if (Ethernet.hardwareStatus() == EthernetNoHardware)
-            Serial.println(F("Ethernet shield was not found..."));
-
-        // check if failed because it isn't connected
-        if (Ethernet.linkStatus() == LinkOFF)
-            Serial.println(F("Ethernet cable is not connected..."));
-
-        while (true) delay(1); // stop (failed to connect to the internet)
+    // check if failed because of no hardware
+    if (Ethernet.hardwareStatus() == EthernetNoHardware) {
+        Serial.println(F("Ethernet shield was not found..."));
+        while (true) delay(10); // stop (no ethernet shield to use)
     }
 
+    // check if failed because it isn't connected
+    if (Ethernet.linkStatus() == LinkOFF) {
+        Serial.println(F("Ethernet cable is not connected..."));
+        while (true) delay(10); // stop (not connected to anything)
+    }
+
+    Serial.println(F("Beginning server..."));
     server.begin();
 
     Serial.print(F("Ip address: "));
