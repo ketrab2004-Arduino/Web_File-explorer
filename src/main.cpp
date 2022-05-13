@@ -22,7 +22,6 @@ void setup() {
 
     Serial.println(F("Starting..."));
 
-    // attempt to connect to the internet (with DHCP for an IP address)
     Ethernet.begin(mac, ip);
 
     // check if failed because of no hardware
