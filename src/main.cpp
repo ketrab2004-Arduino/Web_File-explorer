@@ -63,7 +63,7 @@ void loop() {
     unsigned int urlIndex = 0;
     bool isntGETRequest = false;
 
-    bool currentLineIsBlank = true;
+    bool lastCharIsNewline = true;
     while (client.connected()) {
         if (!client.available()) continue; // skip this iteration
 
@@ -78,7 +78,7 @@ void loop() {
 
         // if we've gotten to the end of the line (received a newline character)
         // and the line is blank, the http request has ended (so we can send a reply)
-        if (c == '\n' && currentLineIsBlank) {
+        if (c == '\n' && lastCharIsNewline) {
             // respond to the client
 
             if (isntGETRequest) {
@@ -118,7 +118,7 @@ void loop() {
         {
         // if we've gotten to the end of the line, mark it as blank
         case '\n':
-            currentLineIsBlank = true;
+            lastCharIsNewline = true;
 
         // ignore carriage returns
         case '\r':
@@ -126,7 +126,7 @@ void loop() {
 
         // if we've gotten to a character, mark the line as no longer blank
         default:
-            currentLineIsBlank = false;
+            lastCharIsNewline = false;
             break;
         }
     }
