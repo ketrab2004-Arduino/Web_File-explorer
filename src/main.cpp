@@ -114,12 +114,21 @@ void loop() {
             break;
         }
 
-
+        switch (c)
+        {
         // if we've gotten to the end of the line, mark it as blank
-        if (c == '\n') currentLineIsBlank = true;
+        case '\n':
+            currentLineIsBlank = true;
 
-        // if we've gotten to a character, mark the line as no longer blank (\r is not not blank)
-        else if (c != '\r') currentLineIsBlank = false;
+        // ignore carriage returns
+        case '\r':
+            break;
+
+        // if we've gotten to a character, mark the line as no longer blank
+        default:
+            currentLineIsBlank = false;
+            break;
+        }
     }
 
     // give the web browser time to receive the data
