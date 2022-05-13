@@ -78,6 +78,10 @@ void loop() {
 
             client.println(F("<!DOCTYPE HTML>"));
             client.println(F("<html>"));
+            client.println(F("<head>"));
+            client.println(F("<title>Arduino Ethernet Shield</title>"));
+            client.println(F("<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"/api/file" WEB_FOLDER "/FAVICON.ICO\">"));
+            client.println(F("</head>"));
             client.println(F("<body>"));
             client.println(F("<h1>Hello World!</h1>"));
             client.println(F("</body>"));
