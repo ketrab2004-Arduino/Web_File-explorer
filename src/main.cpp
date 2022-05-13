@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <SD.h>
 #include <Ethernet.h>
 
 #include <stdint.h>
@@ -9,18 +10,21 @@ IPAddress ip(IP_ADDRESS);
 
 EthernetServer server(80);
 
+String url = "        "; // empty string of 8, for less resizing
+
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, LOW);
-
-    // sketch can hang with an SD card, solution:
-    pinMode(4, OUTPUT);
-    digitalWrite(4, HIGH);
 
     Serial.begin(9200);
     while (!Serial) ; // wait for serial port to connect. Needed for native USB port only
 
     Serial.println(F("Starting..."));
+
+    if (!SD.begin(SD_CS)) {
+        Serial.println(F("SD card initialization failed!"));
+        while (true) delay(10); // stop (no sd card to load data from)
+    }
 
     Ethernet.begin(mac, ip);
 
@@ -56,6 +60,9 @@ void loop() {
     Serial.print(F("with ip: "));
     Serial.println(client.remoteIP());
 
+    unsigned int urlIndex = 0;
+    bool isntGETRequest = false;
+
     bool currentLineIsBlank = true;
     while (client.connected()) {
         if (!client.available()) continue; // skip this iteration
@@ -63,10 +70,29 @@ void loop() {
         char c = client.read(); // read the current character
         Serial.write(c);
 
+        url.setCharAt(urlIndex, c);
+        urlIndex++;
+
+        // 3 because ++ is done before this if statement
+        if (urlIndex == 3 && !url.startsWith(F("GET"))) isntGETRequest = true;
+
         // if we've gotten to the end of the line (received a newline character)
         // and the line is blank, the http request has ended (so we can send a reply)
         if (c == '\n' && currentLineIsBlank) {
             // respond to the client
+
+            if (isntGETRequest) {
+                client.println(F("HTTP/1.1 405 Method Not Allowed"));
+                client.println(F("Allow: GET"));
+                client.println(F("Server: Arduino Ethernet Shield"));
+                client.println(F("X-Powered-By: cpp"));
+                client.println(F("Connection: close")); // close the connection after completing the request
+
+                client.println();
+
+                break;
+            }
+
             client.println(F("HTTP/1.1 200 OK"));
             client.println(F("Server: Arduino Ethernet Shield"));
             client.println(F("X-Powered-By: cpp"));
