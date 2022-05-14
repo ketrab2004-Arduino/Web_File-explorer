@@ -1,16 +1,17 @@
 #include <Arduino.h>
+#include <stdint.h>
 #include <SD.h>
 #include <Ethernet.h>
 
-#include <stdint.h>
+#include <RequestHandler.h>
+#include "Debug/Info.h"
 #include "settings.h"
 
 uint8_t mac[] = { MAC_ADDRESS };
 IPAddress ip(IP_ADDRESS);
 
 EthernetServer server(80);
-
-String url = "        "; // empty string of 8, for less resizing
+RequestHandler requestHandler;
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
@@ -54,88 +55,14 @@ void loop() {
     // if there is no client, do nothing
     if (!client) return;
 
+    // prepare for new request
+    requestHandler.resetValues();
+
+    // enable builtin led while handling request
     digitalWrite(LED_BUILTIN, HIGH);
-    Serial.println(F("There is a client!"));
 
-    Serial.print(F("with ip: "));
-    Serial.println(client.remoteIP());
+    requestHandler.handleRequest(&client);
 
-    unsigned int urlIndex = 0;
-    bool isntGETRequest = false;
-
-    bool lastCharIsNewline = true;
-    while (client.connected()) {
-        if (!client.available()) continue; // skip this iteration
-
-        char c = client.read(); // read the current character
-        Serial.write(c);
-
-        url.setCharAt(urlIndex, c);
-        urlIndex++;
-
-        // 3 because ++ is done before this if statement
-        if (urlIndex == 3 && !url.startsWith(F("GET"))) isntGETRequest = true;
-
-        // if we've gotten to the end of the line (received a newline character)
-        // and the line is blank, the http request has ended (so we can send a reply)
-        if (c == '\n' && lastCharIsNewline) {
-            // respond to the client
-
-            if (isntGETRequest) {
-                client.println(F("HTTP/1.1 405 Method Not Allowed"));
-                client.println(F("Allow: GET"));
-                client.println(F("Server: Arduino Ethernet Shield"));
-                client.println(F("X-Powered-By: cpp"));
-                client.println(F("Connection: close")); // close the connection after completing the request
-
-                client.println();
-
-                break;
-            }
-
-            client.println(F("HTTP/1.1 200 OK"));
-            client.println(F("Server: Arduino Ethernet Shield"));
-            client.println(F("X-Powered-By: cpp"));
-            client.println(F("Content-Type: text/html"));
-            client.println(F("Connection: close")); // close the connection after completing the request
-
-            client.println();
-
-            client.println(F("<!DOCTYPE HTML>"));
-            client.println(F("<html>"));
-            client.println(F("<head>"));
-            client.println(F("<title>Arduino Ethernet Shield</title>"));
-            client.println(F("<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"/api/file" WEB_FOLDER "/FAVICON.ICO\">"));
-            client.println(F("</head>"));
-            client.println(F("<body>"));
-            client.println(F("<h1>Hello World!</h1>"));
-            client.println(F("</body>"));
-            client.println(F("</html>"));
-            break;
-        }
-
-        switch (c)
-        {
-        // if we've gotten to the end of the line, mark it as blank
-        case '\n':
-            lastCharIsNewline = true;
-
-        // ignore carriage returns
-        case '\r':
-            break;
-
-        // if we've gotten to a character, mark the line as no longer blank
-        default:
-            lastCharIsNewline = false;
-            break;
-        }
-    }
-
-    // give the web browser time to receive the data
-    delay(1);
-
-    // close the connection
-    client.stop();
+    // request is finished, so turn off the led
     digitalWrite(LED_BUILTIN, LOW);
-    Serial.println(F("Client disconnected :("));
 }
