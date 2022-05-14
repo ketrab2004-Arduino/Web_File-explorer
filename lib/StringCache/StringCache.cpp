@@ -25,3 +25,20 @@ void StringCache::fill(char c = ' ')
         setCharAt(i, c);
     }
 }
+
+
+void StringCache::temporarySnip(uint16_t length)
+{
+    snipEnd = (char *)c_str() + length; // get the pointer pointing to where the snip should be
+    snippedChar = *snipEnd; // get the character that is getting snipped
+
+    *snipEnd = '\0'; // actually do the snip
+}
+
+void StringCache::undoTemporarySnip()
+{
+    *snipEnd = snippedChar; // undo the snip
+
+    snippedChar = '\0'; // reset the snippedChar
+    snipEnd = nullptr; // reset the snipEnd
+}
