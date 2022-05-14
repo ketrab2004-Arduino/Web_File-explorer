@@ -222,12 +222,89 @@ void RequestHandler::handleReply()
 
 void RequestHandler::handleAPIFileReply()
 {
-    
+    File f = SD.open(store.c_str(), FILE_READ);
+
+    if (!f) {
+        client->println(F("HTTP/1.1 404 Not Found"));
+        sendDefaultHeaders();
+        return;
+    }
+
+    if (f.isDirectory()) {
+        client->println(F("HTTP/1.1 409 Conflict"));
+        client->println(F("X-Error: Folder is not a file"));
+        sendDefaultHeaders();
+
+        f.close();
+        return;
+    }
+
+    client->println(F("HTTP/1.1 200 OK"));
+    // client->println(F("Content-Type: application/json")); // idk lol
+    sendDefaultHeaders();
+
+    client->println();
+
+    for (uint32_t i = 0; i < f.size(); i++) { // go through file
+        client->write(f.read()); // write file to client
+    }
 }
 void RequestHandler::handleAPIFolderReply()
 {
-    
+    File f = SD.open(store.c_str(), FILE_READ);
+
+    if (!f) {
+        client->println(F("HTTP/1.1 404 Not Found"));
+        client->print(F("debug: "));
+        client->println(store.c_str());
+        sendDefaultHeaders();
+        return;
+    }
+
+    if (!f.isDirectory()) {
+        client->println(F("HTTP/1.1 409 Conflict"));
+        client->println(F("X-Error: File is not a folder"));
+        sendDefaultHeaders();
+
+        f.close();
+        return;
+    }
+
+    client->println(F("HTTP/1.1 200 OK"));
+    client->println(F("Content-Type: application/json"));
+    sendDefaultHeaders();
+
+    client->println();
+    client->println(F("["));
+
+    for (uint16_t fileCount = 0; true; fileCount++) {
+        File entry = f.openNextFile();
+
+        if (!entry) break;
+
+        client->println(fileCount > 0 ? F(",{") : F("{")); // add , before { if not first file
+
+        #define var(s,v) print(F("\"" s "\": \"")); client->print(v); client->println(F("\","))
+
+        client->var("name", entry.name());
+        client->var("size", entry.size());
+        client->var("isDirectory", entry.isDirectory() ? F("true") : F("false"));
+        client->var("position", entry.position());
+
+        client->print(F("\"index\": \""));
+        client->print(fileCount);
+        client->println(F("\"")); // no comma on last property
+
+        #undef var // undefine var macro
+
+        client->println(F("}"));
+
+        entry.close();
+    }
+
+    client->println(F("]"));
 }
+
 
 void RequestHandler::sendDefaultHeaders()
 {
