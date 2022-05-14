@@ -24,6 +24,10 @@ void StringCache::fill(char c = ' ')
     for (uint16_t i = 0; i < length(); i++) {
         setCharAt(i, c);
     }
+
+    // old string is gone, so snip info is no longer valid
+    snipEnd = nullptr;
+    snippedChar = '\n';
 }
 
 
