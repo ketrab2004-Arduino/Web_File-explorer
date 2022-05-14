@@ -4,15 +4,17 @@
 #include "settings.h"
 
 #if DEBUG
-#   define debug(x)      Serial.print(x)
-#   define debugF(x)     Serial.print(F(x))
-#   define debugLn(x)    Serial.println(x)
-#   define debugLnF(x)   Serial.println(F(x))
+#   define debug(v)      Serial.print(v)
+#   define debugF(s)     Serial.print(F(s))
+#   define debugLn(v)    Serial.println(v)
+#   define debugLnF(s)   Serial.println(F(s))
+#   define debugWrite(v) Serial.write(v)
 #else
-#   define debug(x)
-#   define debugF(x)
-#   define debugLn(x)
-#   define debugLnF(x)
+#   define debug(v)
+#   define debugF(s)
+#   define debugLn(v)
+#   define debugLnF(s)
+#   define debugWrite(v)
 #endif
 
 #define debugVar(s,v) debugF(s);debugLn(v)
