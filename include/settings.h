@@ -8,4 +8,7 @@
 
 #define WEB_FOLDER "/WEB/FILE-E~1"
 
+#define DEBUG 1
+#define INFO 1
+
 #endif
