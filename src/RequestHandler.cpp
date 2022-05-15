@@ -297,16 +297,16 @@ void RequestHandler::handleAPIFolderReply()
     sendDefaultHeaders();
 
     client->println();
-    client->println(F("["));
+    client->print(F("["));
 
     for (uint16_t fileCount = 0; true; fileCount++) {
         File entry = f.openNextFile();
 
         if (!entry) break;
 
-        client->println(fileCount > 0 ? F(",{") : F("{")); // add , before { if not first file
+        client->print(fileCount > 0 ? F(",{") : F("{")); // add , before { if not first file
 
-        #define var(s,v) print(F("\"" s "\": \"")); client->print(v); client->println(F("\","))
+        #define var(s,v) print(F("\"" s "\":\"")); client->print(v); client->print(F("\","))
 
         client->var("name", entry.name());
         client->var("size", entry.size());
@@ -314,13 +314,13 @@ void RequestHandler::handleAPIFolderReply()
         client->var("position", entry.position());
         client->var("peek", entry.peek());
 
-        client->print(F("\"index\": \""));
+        client->print(F("\"index\":\""));
         client->print(fileCount);
-        client->println(F("\"")); // no comma on last property
+        client->print(F("\"")); // no comma on last property
 
         #undef var // undefine var macro
 
-        client->println(F("}"));
+        client->print(F("}"));
 
         entry.close();
     }
