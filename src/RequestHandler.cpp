@@ -311,7 +311,6 @@ void RequestHandler::handleAPIFolderReply()
         client->var("name", entry.name());
         client->var("size", entry.size());
         client->var("isDirectory", entry.isDirectory() ? F("true") : F("false"));
-        client->var("position", entry.position());
         client->var("peek", entry.peek());
 
         client->print(F("\"index\":\""));
