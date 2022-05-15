@@ -160,6 +160,7 @@ void RequestHandler::handleRequestCharacter(char c, unsigned int &textIndex)
                         storeHasUrl = true;
                         store.temporarySnip(textIndex);
                     }
+
                 } else {
                     routeType = UNKNOWN_ROUTE;
                 }
@@ -268,8 +269,6 @@ void RequestHandler::handleAPIFolderReply()
 
     if (!f) {
         client->println(F("HTTP/1.1 404 Not Found"));
-        client->print(F("debug: "));
-        client->println(store.c_str());
         sendDefaultHeaders();
 
         f.close();
