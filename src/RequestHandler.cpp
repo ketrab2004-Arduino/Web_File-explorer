@@ -144,6 +144,11 @@ void RequestHandler::handleRequestCharacter(char c, unsigned int &textIndex)
                     store.fill();
                     store.addAt(0, '/'); // set first char to /
 
+                    if (c == ' ') { // if space, then the url is /api/file (with nothing after)
+                        storeHasUrl = true;
+                        store.temporarySnip(textIndex);
+                    }
+
                 } else if (store.startsWith("/folder")) {
                     routeType = API_FOLDER;
 
@@ -151,6 +156,10 @@ void RequestHandler::handleRequestCharacter(char c, unsigned int &textIndex)
                     store.fill();
                     store.addAt(0, '/'); // set first char to /
 
+                    if (c == ' ') { // if space, then the url is /api/folder (with nothing after)
+                        storeHasUrl = true;
+                        store.temporarySnip(textIndex);
+                    }
                 } else {
                     routeType = UNKNOWN_ROUTE;
                 }
