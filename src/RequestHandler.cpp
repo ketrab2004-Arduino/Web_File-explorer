@@ -257,8 +257,16 @@ void RequestHandler::handleAPIFileReply()
 
     client->println();
 
-    for (uint32_t i = 0; i < f.size(); i++) { // go through file
-        client->write(f.read()); // write file to client
+    uint8_t buffer[FILE_API_BUFFER_SIZE]; // buffer for faster reading
+
+    for (uint32_t i = 0; i < f.size(); i+= sizeof(buffer)) { // go through file
+        f.readBytes(buffer, sizeof(buffer)); // read a bunch of bytes into a buffer at once
+
+        if (i + sizeof(buffer) > f.size()) // if we're at the end of the file
+            client->write(buffer, f.size() - i); // write the remaining bytes
+
+        else
+            client->write(buffer, sizeof(buffer)); // write the whole buffer
     }
 
     f.close();

@@ -8,6 +8,8 @@
 
 #define WEB_FOLDER "/WEB/FILE-E~1"
 
+#define FILE_API_BUFFER_SIZE 256
+
 #define DEBUG 1
 #define INFO 1
 
