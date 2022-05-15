@@ -196,7 +196,7 @@ void RequestHandler::handleReply()
 
     switch (routeType)
     {
-    case UNKNOWN:
+    case UNKNOWN_ROUTE:
     case API: // API means /api with nothing after it, so no chosen api "method"
         client->println(F("HTTP/1.1 400 Bad Request"));
         sendDefaultHeaders();
@@ -209,7 +209,7 @@ void RequestHandler::handleReply()
         handleAPIFolderReply();
         break;
 
-    // case OTHER: // compiler complains for "duplicate case value"
+    case OTHER:
     default:
         client->println(F("HTTP/1.1 200 OK"));
         sendDefaultHeaders();
