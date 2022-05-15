@@ -1,0 +1,81 @@
+html {
+    font-family: 'Comic Code', 'Comic Code Ligatures', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+}
+
+body {
+    background-color: antiquewhite;
+}
+
+h1 {
+    margin: 2rem 1rem;
+    margin-bottom: 1rem;
+}
+
+#root {
+    width: calc(100% - 2rem);
+    margin: 0rem 1rem;
+    border-spacing: 0 1rem;
+    border-collapse: separate;
+}
+td {
+    height: 100%;
+    border: none;
+    margin: 1rem;
+}
+
+#root > tr {
+    align-items: center;
+    justify-content: space-between;
+
+    margin: 1rem;
+    background-color: rgba(0, 0, 0, 0);
+
+    /* can't have border with border-collapse: separate, so use box-shadow */
+    box-shadow: inset 0px 0px 0px 1px black;
+
+    transition: background-color .5s;
+}
+#root > tr:hover, #root > tr:focus {
+    background-color: rgba(0, 0, 0, 0.125);
+}
+
+#root > tr .left {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+
+    align-self: flex-start;
+}
+#root > tr .index {
+    padding: 1rem;
+    text-align: center;
+}
+#root > tr .name > button {
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+
+    transition: text-decoration .5s;
+    text-decoration: transparent underline;
+}
+#root > tr .name > button:hover, #root > tr .name > button:focus {
+    text-decoration: black underline;
+}
+
+#root > tr .peek-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+#root > tr .peek-title {
+    margin-right: 1rem;
+}
+
+#root > tr .size {
+    padding: 1rem;
+    text-align: right;
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Arduino Ethernet Shield</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/api/file/WEB/FILE-E~1/FAVICON.ICO">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+<body>
+    <h1>Arduino Powered Web File Explorer</h1>
+    <table id="root"></table>
+
+    <template id="template">
+        <tr>
+            <td><div class="left">
+                <p class="index"></p>
+                <h3 class="name"><button></button></h3>
+            </div>
+        </td>
+            
+            <td><div class="peek-info">
+                <p class="peek-title">First byte:</p>
+                <div class="block">
+                    <p class="peek"></p>
+                    <p class="peek-binary"></p>
+                </div>
+            </div></td>
+
+            <td class="size"></td>
+        </tr>
+    </template>
+
+    <script src="./app.js"></script>
+</body>
+</html>
