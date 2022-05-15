@@ -221,9 +221,12 @@ void RequestHandler::handleReply()
         client->println(F("<head>"));
         client->println(F("<title>Arduino Ethernet Shield</title>"));
         client->println(F("<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"/api/file" WEB_FOLDER "/FAVICON.ICO\">"));
+        client->println(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"/api/file" WEB_FOLDER "/STYLE.CSS\">"));
         client->println(F("</head>"));
         client->println(F("<body>"));
-        client->println(F("<h1>Hello World!</h1>"));
+        client->println(F("<h1>Arduino Powered Web File Explorer</h1>"));
+        client->println(F("<div id=\"root\"></div>"));
+        client->println(F("<script src=\"/api/file" WEB_FOLDER "/APP.JS\"></script>"));
         client->println(F("</body>"));
         client->println(F("</html>"));
         break;
