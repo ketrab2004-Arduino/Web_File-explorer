@@ -162,7 +162,7 @@ void RequestHandler::handleRequestCharacter(char c, unsigned int &textIndex)
         } else if (routeType == API_FILE || routeType == API_FOLDER) {
             if (c == ' ') { // if end of the rest of the url (space)
                 storeHasUrl = true;
-                store.temporarySnip(textIndex + 1);
+                store.temporarySnip(textIndex);
 
             } else {
                 store.addAt(textIndex, c);
@@ -227,6 +227,8 @@ void RequestHandler::handleAPIFileReply()
     if (!f) {
         client->println(F("HTTP/1.1 404 Not Found"));
         sendDefaultHeaders();
+
+        f.close();
         return;
     }
 
@@ -248,6 +250,8 @@ void RequestHandler::handleAPIFileReply()
     for (uint32_t i = 0; i < f.size(); i++) { // go through file
         client->write(f.read()); // write file to client
     }
+
+    f.close();
 }
 void RequestHandler::handleAPIFolderReply()
 {
@@ -258,6 +262,8 @@ void RequestHandler::handleAPIFolderReply()
         client->print(F("debug: "));
         client->println(store.c_str());
         sendDefaultHeaders();
+
+        f.close();
         return;
     }
 
@@ -290,6 +296,7 @@ void RequestHandler::handleAPIFolderReply()
         client->var("size", entry.size());
         client->var("isDirectory", entry.isDirectory() ? F("true") : F("false"));
         client->var("position", entry.position());
+        client->var("peek", entry.peek());
 
         client->print(F("\"index\": \""));
         client->print(fileCount);
@@ -303,6 +310,7 @@ void RequestHandler::handleAPIFolderReply()
     }
 
     client->println(F("]"));
+    f.close();
 }
 
 
