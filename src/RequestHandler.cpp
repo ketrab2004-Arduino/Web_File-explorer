@@ -218,16 +218,42 @@ void RequestHandler::handleReply()
 
         client->println(F("<!DOCTYPE HTML>"));
         client->println(F("<html>"));
+
         client->println(F("<head>"));
         client->println(F("<title>Arduino Ethernet Shield</title>"));
         client->println(F("<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"/api/file" WEB_FOLDER "/FAVICON.ICO\">"));
         client->println(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"/api/file" WEB_FOLDER "/STYLE.CSS\">"));
         client->println(F("</head>"));
+
         client->println(F("<body>"));
         client->println(F("<h1>Arduino Powered Web File Explorer</h1>"));
-        client->println(F("<div id=\"root\"></div>"));
+        client->println(F("<button id=\"up-button\">Up a folder</button>"));
+        client->println(F("<table id=\"root\"></table>"));
+
+        client->println(F(
+            "<template id=\"template\">"
+                "<tr>"
+                    "<td><div class=\"left\">"
+                        "<p class=\"index\"></p>"
+                        "<h3 class=\"name\"><button></button></h3>"
+                    "</div>"
+                "</td>"
+                    "<td><div class=\"peek-info\">"
+                        "<p class=\"peek-title\">First byte:</p>"
+                        "<div class=\"block\">"
+                            "<p class=\"peek\"></p>"
+                            "<p class=\"peek-binary\"></p>"
+                        "</div>"
+                    "</div></td>"
+
+                    "<td class=\"size\"></td>"
+                "</tr>"
+            "</template>"
+        ));
+
         client->println(F("<script src=\"/api/file" WEB_FOLDER "/APP.JS\"></script>"));
         client->println(F("</body>"));
+
         client->println(F("</html>"));
         break;
     }
