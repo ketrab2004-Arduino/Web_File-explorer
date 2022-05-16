@@ -95,5 +95,8 @@ function goUpAFolder()
 }
 upButton.addEventListener("click", goUpAFolder);
 
+// update page data on page back pressed
+window.addEventListener("popstate", doPageUpdate);
+
 // startup
 doPageUpdate();
