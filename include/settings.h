@@ -10,7 +10,7 @@
 
 #define FILE_API_BUFFER_SIZE 256
 
-#define DEBUG 1
+#define DEBUG 0
 #define INFO 1
 
 #endif
