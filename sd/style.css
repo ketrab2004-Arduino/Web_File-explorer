@@ -11,6 +11,28 @@ h1 {
     margin-bottom: 1rem;
 }
 
+#up-button {
+    color: inherit;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+    
+    display: inline-block;
+    margin: 0rem 1rem;
+	padding: .5rem;
+    background: rgba(0, 0, 0, 0.125);
+	border: black solid 1px;
+
+    transition: background .5s;
+}
+#up-button:hover, #up-button:focus {
+    background: rgba(0, 0, 0, 0.25);
+}
+#up-button.root {
+    transition: none;
+    background: red;
+}
+
 #root {
     width: calc(100% - 2rem);
     margin: 0rem 1rem;
