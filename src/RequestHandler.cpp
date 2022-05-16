@@ -328,6 +328,9 @@ void RequestHandler::handleAPIFolderReply()
     client->println();
     client->print(F("["));
 
+    // just incase
+    f.rewindDirectory();
+
     for (uint16_t fileCount = 0; true; fileCount++) {
         File entry = f.openNextFile();
 
